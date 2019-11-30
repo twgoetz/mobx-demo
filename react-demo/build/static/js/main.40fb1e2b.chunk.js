@@ -1,0 +1,2 @@
+(this["webpackJsonpmobx-demo"]=this["webpackJsonpmobx-demo"]||[]).push([[0],{3:function(e,t,n){e.exports=n(9)},8:function(e,t,n){},9:function(e,t,n){"use strict";n.r(t);var o=n(0),a=n.n(o),r=n(2),c=n.n(r);n(8);var m=function(){return a.a.createElement("div",{className:"App"},a.a.createElement("h2",null,"MobX state tree demo app"))};c.a.render(a.a.createElement(m,null),document.getElementById("root"))}},[[3,1,2]]]);
+//# sourceMappingURL=main.40fb1e2b.chunk.js.map

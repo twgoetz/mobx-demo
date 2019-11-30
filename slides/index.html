@@ -1,0 +1,374 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>reveal.js</title>
+
+	<link rel="stylesheet" href="css/reset.css">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/white.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/monokai.css">
+
+	<link rel="stylesheet" href="index.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<h2>State management with mobx-state-tree</h1>
+					<h4>Thilo Götz</h3>
+					<p>Social Media Analysis in Cognos Analytics (Social Insights, coming this Xmas)</p>
+			</section>
+
+			<section>
+				<h3>What is state?</h3>
+				<ul>
+					<li class="fragment">
+						State is the data that defines what is showing in the UI
+					</li>
+					<li class="fragment"><h4>Data model</h4>
+						<ul>
+							<li>
+								Data structures representing the content in an SPA
+							</li>
+							<li>
+								May be reflected in server side state
+							</li>
+						</ul>
+					</li>
+					<li class="fragment"><h4>UI State</h4>
+						<ul>
+							<li>
+								Represents presentation status of UI
+							</li>
+							<li>
+								Which elements are we showing/hiding?
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+
+			<section>
+				<h3>State interaction</h3>
+				<img src="img/state-action-ui.png" />
+				<p>
+				Source: <em>MobX Quick Start Guide</em>
+			</p>
+			</section>
+
+			<section>
+				<p>Minimum requirements for a state management system</p>
+				<ul>
+					<li>
+						Data store
+					</li>
+					<li>
+						Update mechanism
+					</li>
+					<li>
+						Notification mechanism
+					</li>
+				</ul>
+			</section>
+
+			<section>
+				<h3>MobX State Tree</h3>
+				<img src="img/Louis_XIV_of_France.jpg" height="800" />
+				<p>L'état c'est moi</p>
+			</section>
+
+			<section>
+				<h3>What's with the name?</h3>
+				<p><em>MobX</em> is the base state handling library. MobX State Tree (MST) is a stricter, more centralized library on built on top of MobX.</p>
+				<p class="fragment">The MobX name has <em>ob</em> for observable, <em>x</em> for reactive, and <em>m</em> for good measure.</p>
+				<p class="fragment">In addition, we have a React integration library called <em>mobx-react</em>. There is a newer version that works with React hooks called 
+					<em>mobx-react-lite</em> which will eventually become the standard.</p>
+			</section>
+
+			<section data-transition="none-out">
+				<pre>
+					<code class="stretch hljs" data-line-numbers=",">import { types } from 'mobx-state-tree';
+import { v4 as uuid } from 'uuid';
+
+// Model for an author
+const Author = types
+  .model({
+    firstName: types.string,
+    lastName: types.string,
+    id: types.string,
+  });
+
+// Model for a single book
+const Book = types
+  .model({
+    authorId: types.string,
+    title: types.string,
+    categoryId: types.string,
+    id: types.string,
+  });
+					</code>
+				</pre>
+			</section>
+
+			<section data-transition="none">
+				<pre>
+					<code class="stretch hljs" data-line-numbers="1,2" >import { types } from 'mobx-state-tree';
+import { v4 as uuid } from 'uuid';
+
+// Model for an author
+const Author = types
+  .model({
+    firstName: types.string,
+    lastName: types.string,
+    id: types.string,
+  });
+
+// Model for a single book
+const Book = types
+  .model({
+    authorId: types.string,
+    title: types.string,
+    categoryId: types.string,
+    id: types.string,
+  });
+					</code>
+				</pre>
+			</section>
+
+
+
+			<section>
+				<pre><code class="javascript stretch hljs" >// The Content consists of a list of authors,
+// a list of books, and a list of categories
+const Content = types
+  .model({
+    authors: types.array(Author),
+    books: types.array(Book),
+    categories: types.array(Category),
+  })
+					
+				</code></pre>
+			</section>
+
+			<section>
+				<pre><code class="javascript stretch hljs" data-line-numbers="3">const Content = types
+  .model({ /* ... */  })
+  .actions(self => ({
+    // Create a new book and add it to the list
+    newBook: (authorId, title, categoryId) => {
+      const book = {
+        authorId,
+        title,
+        categoryId,
+        id: uuid(),
+      };
+      self.books = [...self.books, book];
+    },
+    updateBook: (id, authorId, title, categoryId) => {
+      const books = self.books;
+      const idx = books.findIndex(book => book.id === id);
+      books[idx].authorId = authorId;
+      books[idx].title = title;
+      books[idx].categoryId = categoryId;
+      self.books = books;
+    },</code></pre>
+			</section>
+
+			<section>
+				<pre><code class="javascript stretch hljs" data-line-numbers="5-13">const Content = types
+  .model({ /* ... */  })
+  .actions(self => ({
+    // Create a new book and add it to the list
+    newBook: (authorId, title, categoryId) => {
+      const book = {
+        authorId,
+        title,
+        categoryId,
+        id: uuid(),
+      };
+      self.books = [...self.books, book];
+    },
+    updateBook: (id, authorId, title, categoryId) => {
+      const books = self.books;
+      const idx = books.findIndex(book => book.id === id);
+      books[idx].authorId = authorId;
+      books[idx].title = title;
+      books[idx].categoryId = categoryId;
+      self.books = books;
+    },</code></pre>
+			</section>
+
+			<section>
+				<pre><code class="javascript stretch hljs" data-line-numbers="14-21">const Content = types
+  .model({ /* ... */  })
+  .actions(self => ({
+    // Create a new book and add it to the list
+    newBook: (authorId, title, categoryId) => {
+      const book = {
+        authorId,
+        title,
+        categoryId,
+        id: uuid(),
+      };
+      self.books = [...self.books, book];
+    },
+    updateBook: (id, authorId, title, categoryId) => {
+      const books = self.books;
+      const idx = books.findIndex(book => book.id === id);
+      books[idx].authorId = authorId;
+      books[idx].title = title;
+      books[idx].categoryId = categoryId;
+      self.books = books;
+    },</code></pre>
+			</section>
+
+			<section>
+				<pre><code class="stretch hljs" data-line-numbers="4-18">const Content = types
+  .model({ /* ... */  })
+  .actions(self => ({/* ... */  }))
+  .views(self => ({
+    // Returns the author if it exists, undefined else
+    getAuthorById: (authorId) => {
+      return self.authors.find(author => author.id === authorId);
+    },
+    getCategoryById: (categoryId) => {
+      return self.categories.find(cat => cat.id === categoryId);
+    },
+    getBookById: (id) => {
+      return self.books.find(book => book.id === id);
+    },
+    getBooksByAuthor: (authorId) => {
+      return self.books.filter((book) => book.authorId === authorId);
+    },
+  }));
+</code></pre>
+			</section>
+
+			<section>
+				<pre><code class="stretch hljs" data-line-numbers="">import React from 'react';
+import { observer } from 'mobx-react-lite';
+import { authorsView, booksView, categoriesView }
+  from '../state/UIState';
+
+const AuthorsDisplay = observer(({ stateStore }) => {
+  const uiState = stateStore.uiState;
+  const authorId = uiState.selectedItem.id;
+  const author = stateStore.content.getAuthorById(authorId);
+  const edit = () => uiState.modifyItem(
+    authorId, 
+    uiState.selectedView);
+  
+  return (
+    <div>
+      <h4>Author: {author.firstName} {author.lastName}</h4>
+      <span className="edit-button" onClick={edit} >Edit</span>
+    </div>
+  );
+});
+				</code></pre>
+			</section>
+
+			<section>
+				<h3>More state change intercept points</h3>
+				<ul>
+					<li>
+						<span style="font-family: 'Courier New', Courier, monospace" >onAction(observable, ({ name, args }) => {/* ... */})</span>
+						<ul>
+							<li>Lets you intercept calls to <em>action</em> functions</li>
+							<li>Can be used to directly react to calls to actions where necessary</li>
+						</ul>
+					</li>
+					<li>
+							<span style="font-family: 'Courier New', Courier, monospace" >onPatch(observable, ({ path, op }) => {/* ... */})</span>
+							<ul>
+								<li>Lets you intercept state change as JSON patch (jsonpatch.com)</li>
+								<li>Provides fine-grained control over what changes to react to</li>
+							</ul>
+						</li>
+					</ul>
+			</section>
+
+			<section>
+				<h3>Conclusion</h3>
+				<ul>
+					<li class="fragment">MST provides simple and effective state management for React (and probably other) applications</li>
+					<li class="fragment">State related functions are grouped together, which simplifies maintenance</li>
+					<li class="fragment">State update is super easy and convenient</li>
+					<li class="fragment">Observing state change is easy in simple cases, but can get tricky when requirements become more complex</li>
+					<li class="fragment">Mobx state tree is better than Redux (10min): https://www.youtube.com/watch?v=9sKpx60zBNI</li>
+				</ul>
+			</section>
+
+			<section>
+				<pre><code class="stretch hljs" data-line-numbers="">
+				</code></pre>
+			</section>
+
+			<section>
+				<pre><code class="stretch hljs" data-line-numbers="">
+				</code></pre>
+			</section>
+
+			<section>
+				<pre><code class="stretch hljs" data-line-numbers="">
+				</code></pre>
+			</section>
+
+			<section>
+				<pre><code class="stretch hljs" data-line-numbers="">
+				</code></pre>
+			</section>
+
+			<section>
+				<pre><code class="stretch hljs" data-line-numbers="">
+				</code></pre>
+			</section>
+
+			<section>
+				<pre><code class="stretch hljs" data-line-numbers="">
+				</code></pre>
+			</section>
+
+
+		</div>
+	</div>
+
+	<script src="js/reveal.js"></script>
+
+	<script>
+		// More info about config & dependencies:
+		// - https://github.com/hakimel/reveal.js#configuration
+		// - https://github.com/hakimel/reveal.js#dependencies
+		Reveal.initialize({
+			width: "100%",
+			height: "100%",
+			margin: 5,
+			minScale: 1,
+			maxScale: 1,
+			dependencies: [
+				{ src: 'plugin/markdown/marked.js' },
+				{ src: 'plugin/markdown/markdown.js' },
+				{ src: 'plugin/notes/notes.js', async: true },
+				{ src: 'plugin/highlight/highlight.js', async: true },
+			]
+		});
+	</script>
+</body>
+
+</html>
