@@ -1,0 +1,28 @@
+{
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "carbon-components": "^10.36.0",
+    "carbon-components-react": "^7.36.0",
+    "carbon-icons": "^7.0.7",
+    "mobx": "^6.3.2",
+    "mobx-react": "^7.2.0",
+    "mobx-state-tree": "^5.0.2",
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0",
+    "react-router-dom": "^5.2.0"
+  },
+  "devDependencies": {
+    "@types/carbon-components-react": "^7.34.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@vitejs/plugin-react-refresh": "^1.3.1",
+    "sass": "^1.35.1",
+    "typescript": "^4.1.2",
+    "vite": "^2.3.5"
+  }
+}
