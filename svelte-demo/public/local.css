@@ -1,0 +1,99 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app {
+  margin-left: 1rem;
+}
+
+.main-view {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.nav-bar {
+  flex-basis: 25rem;
+  flex-grow: 1;
+  border: 2px solid;
+  padding: 1rem;
+  margin-right: 1rem;
+}
+
+.nav-tabs {
+  display: flex;
+}
+
+.nav-tabs-button {
+  border: 1px solid;
+  margin-right: 0.5rem;
+  padding: 0.2rem;
+}
+
+.nav-tabs-button:hover {
+  cursor: pointer;
+}
+
+.nav-tabs-button.selected {
+  background-color: rgb(178, 178, 235);
+}
+
+.nav-items li {
+  list-style: none; 
+}
+
+.content-view {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-width: 50%;
+  padding: 0;
+}
+
+.content-display {
+  background-color: aliceblue;
+  border-radius: 1rem;
+  min-height: 15rem;
+  margin: 0;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.content-edit {
+  background-color: beige;
+  border-radius: 1rem;
+  min-height: 15rem;
+  padding: 1rem;
+}
+
+.edit-button {
+  width: min-content;
+  background-color: white;
+  padding: 0.5rem;
+  border: 1px solid;
+  margin: 1rem 0 0 0;
+}
+
+.edit-button:hover {
+  cursor: pointer;
+}
+
+.io-buttons {
+  padding: 2rem 0 0 0;
+  display: flex;
+}
+
+.io-button {
+  background-color: white;
+  padding: 0.5rem;
+  border: 1px solid;
+  margin: 0 1rem 0 0;
+}
+
+.io-button:hover {
+  cursor: pointer;
+}
+
