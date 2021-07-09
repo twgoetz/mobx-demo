@@ -4,3 +4,11 @@ $feature-flags: (
 
 @import 'carbon-components/scss/globals/scss/styles.scss';
 
+.mx--button {
+  margin: 1em 1em 0 0;
+  width: 100%;
+}
+
+.bx--text-input-wrapper {
+  padding-bottom: 2em;
+}

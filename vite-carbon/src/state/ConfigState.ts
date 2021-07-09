@@ -54,6 +54,9 @@ const ConfigModel = types
         get portError(): string | undefined {
             return portError(self.port);
         },
+        get isValid(): boolean {
+            return !minInstancesError && !maxInstancesError && !portError;
+        }
     }))
     .views((self) => ({
         get isValid(): boolean {
