@@ -1,25 +1,27 @@
 import { Button, TextInput, Tile } from "@carbon/react";
 import { observer } from "mobx-react";
-import { applySnapshot, getSnapshot } from "mobx-state-tree";
-import React, { ChangeEvent, useState } from "react";
-import "./App.scss";
-import { ConfigModel } from "./state/ConfigState";
+import React, { ChangeEvent, useEffect, useState } from "react";
+// import "./App.scss";
+import { IConfigUIModel } from "./state/ConfigState3";
+import { IConfiguration } from "./types";
 
-function App() {
-  // Create the mobx state here. Can then be distributed via props, or React context.
-  const [configState] = useState(ConfigModel.create());
-  // Fake a saved instance
-  const [lastSave, setLastSave] = useState(getSnapshot(configState));
-  // Has the UI state been modified since the last save/cancel?
-  const [isDirty, setIsDirty] = useState<boolean>(false);
+const AppUI: React.FC<{ state: IConfigUIModel }> = observer(({ state }) => {
+  const [config, setConfig] = useState<IConfiguration>({
+    instances: { max: 1, min: 0 },
+  });
+  const m = state.content;
+
+  useEffect(() => {
+    m.import(config);
+  }, []);
 
   // Promote a string setter to an input change handler
   const changeHandler = (
     handler: (value: string) => void
   ): ((event: ChangeEvent<HTMLInputElement>) => void) => {
     return (event) => {
-      if (!isDirty) {
-        setIsDirty(true);
+      if (!state.isDirty) {
+        state.setIsDirty(true);
       }
       handler(event.target.value);
     };
@@ -32,10 +34,10 @@ function App() {
         className="mx--text-input"
         id="min input"
         labelText="Minimum instances"
-        value={configState.minInstances}
-        invalid={!!configState.minInstancesError}
-        invalidText={configState.minInstancesError}
-        onChange={changeHandler(configState.setMinInstances)}
+        value={m.minInstances || ""}
+        invalid={!!state.minInstancesValid}
+        invalidText={state.minInstancesValid}
+        onChange={changeHandler(m.setMinInstances)}
         placeholder="Type some text"
         light={true}
       />
@@ -43,10 +45,10 @@ function App() {
         className="mx--text-input"
         id="max input"
         labelText="Maximum instances"
-        value={configState.maxInstances}
-        invalid={!!configState.maxInstancesError}
-        invalidText={configState.maxInstancesError}
-        onChange={changeHandler(configState.setMaxInstances)}
+        value={m.maxInstances || ""}
+        invalid={!!state.maxInstancesValid}
+        invalidText={state.maxInstancesValid}
+        onChange={changeHandler(m.setMaxInstances)}
         placeholder="Type some text"
         light={true}
       />
@@ -54,10 +56,10 @@ function App() {
         className="mx--text-input"
         id="port input"
         labelText="Container port"
-        value={configState.port}
-        invalid={!!configState.portError}
-        invalidText={configState.portError}
-        onChange={changeHandler(configState.setPort)}
+        value={m.port || ""}
+        invalid={!!state.portValid}
+        invalidText={state.portValid}
+        onChange={changeHandler(m.setPort)}
         placeholder="Type some text"
         light={true}
       />
@@ -66,36 +68,31 @@ function App() {
 
   // On save, we cancel the dirty state and save a snapshot of the model
   const onSave = (): void => {
-    setIsDirty(false);
-    const snapshot = getSnapshot(configState);
-    setLastSave(snapshot);
-    console.log(JSON.stringify(getSnapshot(configState), null, 2));
+    setConfig(m.export);
+    state.setIsDirty(false);
   };
 
   // On cancel, reset the dirty state and load the snapshot that was saved earlier (or the empty state)
   const onCancel = (): void => {
-    setIsDirty(false);
-    applySnapshot(configState, lastSave);
-    console.log(JSON.stringify(getSnapshot(configState), null, 2));
+    m.import(config);
+    state.setIsDirty(false);
   };
-
-  // Note: no separate useState required
-  const canSave: boolean = isDirty && configState.isValid;
 
   const buttons = (
     <>
       <Button
         className="mx--button"
         role="primary"
-        disabled={!canSave}
+        disabled={!state.isDirty || !state.canSave}
         onClick={onSave}
+        data-testid='save-button'
       >
         Save
       </Button>
       <Button
         className="mx--button"
         role="primary"
-        disabled={!isDirty}
+        disabled={!state.isDirty}
         onClick={onCancel}
       >
         Cancel
@@ -113,6 +110,6 @@ function App() {
       </div>
     </>
   );
-}
+});
 
-export default observer(App);
+export default AppUI;
