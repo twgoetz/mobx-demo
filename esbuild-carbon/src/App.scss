@@ -1,0 +1,34 @@
+@use '@carbon/styles/scss/config' with (
+  $font-path: '@ibm/plex'
+);
+@use '@carbon/react';
+@use '@carbon/layout';
+@use '@carbon/type';
+
+
+// Include type reset
+@include type.reset();
+
+// Include default type styles, targets h1, h2, h3, etc
+@include type.default-type();
+
+// Include utility classes for type-related properties
+@include type.type-classes();
+
+.mx--button {
+  margin: 1em 1em 0 0;
+  width: 100%;
+}
+
+.cds--text-input-wrapper {
+  padding-bottom: 2em;
+}
+
+.mx--button-container {
+  margin-top: layout.$spacing-05;
+  margin-left: layout.$spacing-05;
+}
+
+.mx--main-heading {
+  margin: layout.$spacing-05;
+}
