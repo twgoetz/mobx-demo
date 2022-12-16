@@ -2,7 +2,7 @@ import React, {createElement} from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import AppUI from "./AppUI";
-import { initConfigModel } from './state/ConfigState3';
+import { initConfigModel } from './state/ConfigState';
 
 describe('UI test', () => {
   it('should enable the save button when a value has changed', async () => {

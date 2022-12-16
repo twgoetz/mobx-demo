@@ -2,7 +2,7 @@ import { Button, TextInput, Tile } from "@carbon/react";
 import { observer } from "mobx-react";
 import React, { ChangeEvent, useEffect, useState } from "react";
 // import "./App.scss";
-import { IConfigUIModel } from "./state/ConfigState3";
+import { IConfigUIModel } from "./state/ConfigState";
 import { IConfiguration } from "./types";
 
 const AppUI: React.FC<{ state: IConfigUIModel }> = observer(({ state }) => {
@@ -35,33 +35,30 @@ const AppUI: React.FC<{ state: IConfigUIModel }> = observer(({ state }) => {
         id="min input"
         labelText="Minimum instances"
         value={m.minInstances || ""}
-        invalid={!!state.minInstancesValid}
-        invalidText={state.minInstancesValid}
+        invalid={!!state.minInstancesError}
+        invalidText={state.minInstancesError}
         onChange={changeHandler(m.setMinInstances)}
         placeholder="Type some text"
-        light={true}
       />
       <TextInput
         className="mx--text-input"
         id="max input"
         labelText="Maximum instances"
         value={m.maxInstances || ""}
-        invalid={!!state.maxInstancesValid}
-        invalidText={state.maxInstancesValid}
+        invalid={!!state.maxInstancesError}
+        invalidText={state.maxInstancesError}
         onChange={changeHandler(m.setMaxInstances)}
         placeholder="Type some text"
-        light={true}
       />
       <TextInput
         className="mx--text-input"
         id="port input"
         labelText="Container port"
         value={m.port || ""}
-        invalid={!!state.portValid}
-        invalidText={state.portValid}
+        invalid={!!state.portError}
+        invalidText={state.portError}
         onChange={changeHandler(m.setPort)}
         placeholder="Type some text"
-        light={true}
       />
     </Tile>
   );

@@ -3,11 +3,11 @@ import { observer } from "mobx-react";
 import { applySnapshot, getSnapshot } from "mobx-state-tree";
 import React, { ChangeEvent, useState } from "react";
 import "./App.scss";
-import { ConfigModel } from "./state/ConfigState";
+import { initConfigModel } from "./state/ConfigState";
 
 function App() {
   // Create the mobx state here. Can then be distributed via props, or React context.
-  const [configState] = useState(ConfigModel.create());
+  const [configState] = useState(initConfigModel());
   // Fake a saved instance
   const [lastSave, setLastSave] = useState(getSnapshot(configState));
   // Has the UI state been modified since the last save/cancel?
@@ -25,6 +25,8 @@ function App() {
     };
   };
 
+  const contentState = configState.content;
+
   const formFields = (
     <Tile>
       <h4>Input fields</h4>
@@ -32,10 +34,10 @@ function App() {
         className="mx--text-input"
         id="min input"
         labelText="Minimum instances"
-        value={configState.minInstances}
+        value={contentState.minInstances}
         invalid={!!configState.minInstancesError}
         invalidText={configState.minInstancesError}
-        onChange={changeHandler(configState.setMinInstances)}
+        onChange={changeHandler(contentState.setMinInstances)}
         placeholder="Type some text"
         light={true}
       />
@@ -43,10 +45,10 @@ function App() {
         className="mx--text-input"
         id="max input"
         labelText="Maximum instances"
-        value={configState.maxInstances}
+        value={contentState.maxInstances}
         invalid={!!configState.maxInstancesError}
         invalidText={configState.maxInstancesError}
-        onChange={changeHandler(configState.setMaxInstances)}
+        onChange={changeHandler(contentState.setMaxInstances)}
         placeholder="Type some text"
         light={true}
       />
@@ -54,10 +56,10 @@ function App() {
         className="mx--text-input"
         id="port input"
         labelText="Container port"
-        value={configState.port}
+        value={contentState.port}
         invalid={!!configState.portError}
         invalidText={configState.portError}
-        onChange={changeHandler(configState.setPort)}
+        onChange={changeHandler(contentState.setPort)}
         placeholder="Type some text"
         light={true}
       />
@@ -80,7 +82,7 @@ function App() {
   };
 
   // Note: no separate useState required
-  const canSave: boolean = isDirty && configState.isValid;
+  const canSave: boolean = isDirty && configState.canSave;
 
   const buttons = (
     <>
