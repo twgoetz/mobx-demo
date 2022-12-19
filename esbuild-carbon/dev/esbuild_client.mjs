@@ -3,7 +3,7 @@ import { sassPlugin } from "esbuild-sass-plugin";
 
 esbuild
   .build({
-    entryPoints: ["./src/App.tsx"],
+    entryPoints: ["./src/main.tsx"],
     outdir: "./dist",
     entryNames: "[dir]/[name].bundle",
     bundle: true,

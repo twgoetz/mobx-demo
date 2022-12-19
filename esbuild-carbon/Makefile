@@ -3,7 +3,6 @@ distBasePath := dist
 srcPath := src
 
 # Source files
-appScssFile := $(srcPath)/App.scss
 srcFiles := $(shell find src  \( -name '*.[jt]s' -o -name '*.[jt]sx' -o -name '*.[s]css' \) | grep -v '.test.')
 
 # Target files
@@ -16,7 +15,7 @@ appJsBundle := $(distBasePath)/App.bundle.js
 
 # Build scripts
 esbuild := node dev/esbuild_client.mjs
-esbuildServer := node dev/esbuild-server.mjs
+esbuildServer := node dev/esbuild_server.mjs
 
 .PHONY: all
 all: prepare static $(appJsBundle) ## Build everything; best to run with 'clean'
@@ -57,3 +56,9 @@ $(appJsBundle): $(srcFiles)
 
 test: ## Run unit tests
 	npm test
+
+dist/server.js: server/main.ts
+	$(esbuildServer)
+
+.PHONY: server
+server: dist/server.js ## Build the test server (run with 'node dist/server.js')
