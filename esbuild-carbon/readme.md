@@ -1,5 +1,6 @@
-# Mobx state tree sample app with Carbon and Vite
+# Mobx state tree sample app with Carbon and esbuild
 
 ## Usage
 
-Do an `npm install`, then `npm run dev`. This will start the development server on `localhost:3003`. You can change the port in the `package.json`. The first time loading takes a long time because of the Carbon Sass compilation. So will any subsequent change if you change the `.scss` files. Thanks Carbon for making this so horrible. Any other code change is reflected immediately. If not, reload the page.
+Do an `npm install`, then `make all server`. This builds the client and simple server. Run the server with `node dist/server.js`.
+Check the console log for the PORT (which you can change in the code).

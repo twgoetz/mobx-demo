@@ -4,8 +4,6 @@ import path from 'path';
 const app = express();
 const cwd = process.cwd();
 
-console.log(`running server in: ${cwd}`);
-
 app.use(express.static(path.join(cwd, 'dist')));
 
 app.get('/', function (req: any, res: any) {
