@@ -9,16 +9,12 @@ srcFiles := $(shell find src  \( -name '*.[jt]s' -o -name '*.[jt]sx' -o -name '*
 appCssBundle := $(distBasePath)/App.bundle.css
 appJsBundle := $(distBasePath)/App.bundle.js
 
-# Marker files. Since the output of compilation may get a different name each time for
-# cache busting, we need to give the Makefile something constant it can drive the build
-# off of. Use marker files that we update every time we've done a build.
-
 # Build scripts
 esbuild := node dev/esbuild_client.mjs
 esbuildServer := node dev/esbuild_server.mjs
 
 .PHONY: all
-all: prepare static $(appJsBundle) ## Build everything; best to run with 'clean'
+all: prepare static $(appJsBundle) server ## Build everything; best to run with 'clean'
 .DEFAULT_GOAL := all
 
 # Remove everything
@@ -32,8 +28,8 @@ clean: ## Clean the dist directory
 prepare: $(distBasePath)
 
 .PHONY: run
-run: all ## Start the local dev proxy
-	npm run native:start
+run: all ## Start the demo server
+	node dist/server.js
 
 # Help target copied from https://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 # The help text is generated for targets that are followed by ## target description. See the 'help' target below for an example.
